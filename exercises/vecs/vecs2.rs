@@ -9,7 +9,7 @@
 
 
 fn vec_loop(mut v: Vec<i32>) -> Vec<i32> {
-    for element in v.iter_mut() {
+    for element in v.iter_mut() {  //element is a iterator(pointer)
         // TODO: Fill this up so that each element in the Vec `v` is
         // multiplied by 2.
         *element *= 2;

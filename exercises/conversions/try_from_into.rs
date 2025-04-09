@@ -27,7 +27,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
 
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
@@ -41,6 +40,20 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+         // use tuple_map::*;
+         vec![tuple.0, tuple.1, tuple.2].iter()
+         .map(|c| (0 ..=255).contains(c))
+         .reduce(|a, b| a && b)
+         .filter(|c| *c)
+         .map(|c| Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
+         .ok_or(IntoColorError::IntConversion)
+
+
+     // if tuple.0 < 0 || tuple.1 < 0 || tuple.2 < 0 || tuple.0 > 255 || tuple.1 > 255 || tuple.2 > 255 {
+     //     Err(IntoColorError::IntConversion)
+     // } else {
+     //     Ok(Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
+     // }
     }
 }
 
@@ -48,6 +61,12 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let tuple = (arr[0], arr[1], arr[2]);
+        if tuple.0 < 0 || tuple.1 < 0 || tuple.2 < 0 || tuple.0 > 255 || tuple.1 > 255 || tuple.2 > 255 {
+            Err(IntoColorError::IntConversion)
+        } else {
+            Ok(Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
+        }
     }
 }
 
@@ -55,6 +74,15 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(IntoColorError::BadLen);
+        }
+        let tuple = (slice[0], slice[1], slice[2]);
+        if tuple.0 < 0 || tuple.1 < 0 || tuple.2 < 0 || tuple.0 > 255 || tuple.1 > 255 || tuple.2 > 255 {
+            Err(IntoColorError::IntConversion)
+        } else {
+            Ok(Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
+        }
     }
 }
 
